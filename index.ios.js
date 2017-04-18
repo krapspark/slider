@@ -37,13 +37,13 @@ export default class slider extends Component {
 
   onScrollTop(e) {
     if (!this.scrollingTop) {
-      this.bottomList.scrollTo({x: e.nativeEvent.contentOffset.x, y: 0, animated: true});
+      this.bottomList.scrollTo({x: e.nativeEvent.contentOffset.x, y: 0, animated: false});
     }
   }
 
   onScrollBottom(e) {
     if (!this.scrollingBottom) {
-      this.topList.scrollTo({x: e.nativeEvent.contentOffset.x, y: 0, animated: true});
+      this.topList.scrollTo({x: e.nativeEvent.contentOffset.x, y: 0, animated: false});
     }
   }
 
@@ -55,6 +55,7 @@ export default class slider extends Component {
           style={[styles.scroll, styles.top]}
           horizontal={true}
           onScroll={this.onScrollTop}
+          scrollEventThrottle={33}
           pagingEnabled={true}
         >
           <View style={styles.card}>
