@@ -14,6 +14,7 @@ import {
   Dimensions,
   FlatList,
   Animated,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 const dim = Dimensions.get('window');
@@ -33,16 +34,36 @@ export default class slider extends Component {
 
     this.onScrollTop = this.onScrollTop.bind(this);
     this.onScrollBottom = this.onScrollBottom.bind(this);
+    this.onTopIn = this.onTopIn.bind(this);
+    this.onTopOut = this.onTopOut.bind(this);
+    this.onBotIn = this.onBotIn.bind(this);
+    this.onBotOut = this.onBotOut.bind(this);
+  }
+
+  onTopIn() {
+    this.scrollingTop = true;
+  }
+
+  onTopOut() {
+    setTimeout(() => { this.scrollingTop = false; }, 1000);
+  }
+
+  onBotIn() {
+    this.scrollingBottom = true;
+  }
+
+  onBotOut() {
+    setTimeout(() => { this.scrollingBottom = false; }, 1000);
   }
 
   onScrollTop(e) {
-    if (!this.scrollingTop) {
+    if (this.scrollingTop) {
       this.bottomList.scrollTo({x: e.nativeEvent.contentOffset.x, y: 0, animated: false});
     }
   }
 
   onScrollBottom(e) {
-    if (!this.scrollingBottom) {
+    if (this.scrollingBottom) {
       this.topList.scrollTo({x: e.nativeEvent.contentOffset.x, y: 0, animated: false});
     }
   }
@@ -50,53 +71,65 @@ export default class slider extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView
-          ref={(list) => {this.topList = list;}}
-          style={[styles.scroll, styles.top]}
-          horizontal={true}
-          onScroll={this.onScrollTop}
-          scrollEventThrottle={33}
-          pagingEnabled={true}
+        <TouchableWithoutFeedback
+          onPressIn={this.onTopIn}
+          onPressOut={this.onTopOut}
         >
-          <View style={styles.card}>
-            <Text>
-              a
-            </Text>
-          </View>
-          <View style={styles.card}>
-            <Text>
-              b
-            </Text>
-          </View>
-          <View style={styles.card}>
-            <Text>
-              c
-            </Text>
-          </View>
-        </ScrollView>
-        <ScrollView
-          ref={(list) => {this.bottomList = list;}}
-          style={[styles.scroll]}
-          horizontal={true}
-          data={data}
-          pagingEnabled={true}
+          <ScrollView
+            ref={(list) => {this.topList = list;}}
+            style={[styles.scroll, styles.top]}
+            horizontal={true}
+            onScroll={this.onScrollTop}
+            scrollEventThrottle={33}
+            pagingEnabled={true}
+          >
+            <View style={styles.card}>
+              <Text>
+                a
+              </Text>
+            </View>
+            <View style={styles.card}>
+              <Text>
+                b
+              </Text>
+            </View>
+            <View style={styles.card}>
+              <Text>
+                c
+              </Text>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          onPressIn={this.onBotIn}
+          onPressOut={this.onBotOut}
         >
-          <View style={styles.card}>
-            <Text>
-              a
-            </Text>
-          </View>
-          <View style={styles.card}>
-            <Text>
-              b
-            </Text>
-          </View>
-          <View style={styles.card}>
-            <Text>
-              c
-            </Text>
-          </View>
-        </ScrollView>
+          <ScrollView
+            ref={(list) => {this.bottomList = list;}}
+            style={[styles.scroll]}
+            horizontal={true}
+            data={data}
+            pagingEnabled={true}
+            onScroll={this.onScrollBottom}
+            scrollEventThrottle={33}
+          >
+            <View style={styles.card}>
+              <Text>
+                a
+              </Text>
+            </View>
+            <View style={styles.card}>
+              <Text>
+                b
+              </Text>
+            </View>
+            <View style={styles.card}>
+              <Text>
+                c
+              </Text>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
       </View>
     );
   }
